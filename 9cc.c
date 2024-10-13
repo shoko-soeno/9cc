@@ -119,7 +119,8 @@ Token *tokenize()
       continue;
     }
 
-    if (*p == '+' || *p == '-')
+    // Punctuator
+    if (strchar("+-*/()", *p))
     {
       cur = new_token(TK_RESERVED, cur, p++);
       continue;
@@ -132,7 +133,7 @@ Token *tokenize()
       continue;
     }
 
-    error_at(p, "expected a number");
+    error_at(p, "invalid token");
   }
 
   new_token(TK_EOF, cur, p);
@@ -143,6 +144,17 @@ Token *tokenize()
 // p: 数値部分が始まる文字列の位置。
 // &p: 数値の変換後、p は自動的に数値の次の位置まで進む（数値の部分をスキップ）
 // 10: 10進数として数値を解析
+
+
+// Parser
+
+typedef enum {
+  ND_ADD, // +
+  ND_SUB, // -
+  ND_MUL, // *
+  ND_DIV, // /
+  ND_NUM, // integer
+} NodeKind;
 
 
 int main(int argc, char **argv) {
